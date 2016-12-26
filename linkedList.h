@@ -1,54 +1,27 @@
-# ifndef LINKED_LIST_H
-# define LINKED_LIST_H
+# ifndef LINKEDLIST_H
+# define LINKEDLIST_H
 
 # include <stdlib.h>
 
-# include "llNode.h"
-
-struct linkedList
+typedef struct linkedList_node
 {
-    int size;
-    struct llNode *root;
-};
+    int val;
+    struct linkedList_node *next;
+} node;
 
-/*
- * Print all the elements of the linked list, space delimited
- */
-void printLinkedList(struct linkedList *llist);
+// Build a simple example Linked List. It will look
+// like this:
+// |0| -> |1| -> |2| -> |3| -> |4| -> |5|
+// @return: the head node of the linked list
+node *buildExampleLinkedList(void);
 
-/*
- * Add node at index i.  If index i is too big, add the node
- * to the back of the linked list.
- */
-void addLlNodeAt(struct linkedList *llist, int val, int i);
+// Remove the first node containing the value val.
+// @param node **head: pointer to pointer to head node
+// @param int val: value to be removed from linked list
+// @return: the node removed from the linked list
+node *removeNode(node **head, int val);
 
-/*
- * Add node to end of linked list.
- */
-void addLlNodeLast(struct linkedList *llist, int val);
-
-/*
- * Add node to front of linked list.
- */
-void addLlNodeFirst(struct linkedList *llist, int val);
-
-/*
- * Remove the node at index i. If index i is too big, remove
- * the last element of the linked list. Do nothing if the
- * linked list is empty.
- */
-void removeLlNodeAt(struct linkedList *llist, int i);
-
-/*
- * Remove the last node in the linked list. Do nothing if
- * the linked list is empty.
- */
-void removeLlNodeLast(struct linkedList *llist);
-
-/*
- * Remove the first node in the linked list.  Do nothing
- * if the linked list is empty.
- */
-void removeLlNodeFirst(struct linkedList *llist);
+// Print all the elements of the linked list
+void printLinkedList(node *head);
 
 # endif

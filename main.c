@@ -3,21 +3,14 @@
 
 # include "linkedList.h"
 
-int main(void) 
+int main(void)
 {
-    struct linkedList *myLl = malloc(sizeof(struct linkedList));
+    node *head = buildExampleLinkedList();
+    printLinkedList(head);
 
-    addLlNodeLast(myLl, 5);
-    addLlNodeLast(myLl, 7);
-    addLlNodeLast(myLl, 122);
-    printLinkedList(myLl);
+    node *n2 = removeNode(&head, 2);
+    printLinkedList(head);
 
-    removeLlNodeLast(myLl);
-    printLinkedList(myLl);
-
-    addLlNodeAt(myLl,40,1);
-    printLinkedList(myLl);
-
-    removeLlNodeFirst(myLl);
-    printLinkedList(myLl);
+    node *n0 = removeNode(&head, 0);
+    printLinkedList(head);
 }

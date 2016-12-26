@@ -1,89 +1,70 @@
-# include <stdlib.h>
 # include <stdio.h>
+# include <stdlib.h>
 
-# include "llNode.h"
 # include "linkedList.h"
 
-void printLinkedList(struct linkedList *llist) {
-    struct llNode *currNode = llist->root;
-    while(currNode) {
-        printf("%d ",currNode->val);
-        currNode = currNode->next;
-    } 
-    printf("\n");
-}
+node *buildExampleLinkedList(void)
+{
+    node *head = NULL;
 
-void addLlNodeAt(struct linkedList *llist, int val, int i) {
-    llist->size += 1;
-    struct llNode *newNode = malloc(sizeof(struct llNode));
-    newNode->val = val;
-
-    if(i == 0){
-        newNode->next = llist->root;
-        llist->root = newNode;
-        return;
+    for (int i = 5; i >= 0; i--)
+    {
+        node *newNode = (node *)malloc(sizeof(node));
+        newNode->val = i;
+        newNode->next = head;
+        head = newNode;
     }
 
-    struct llNode *currNode = llist->root;
-    while(currNode->next) {
-        if(i == 1) {
-            struct llNode *temp = currNode->next;
-            currNode->next = newNode;
-            newNode->next = temp;
-            return;
-        }
-
-        i--;
-        currNode = currNode->next;
-    }
-    currNode->next = newNode;
+    return head;
 }
 
-void addLlNodeLast(struct linkedList *llist, int val) {
-    addLlNodeAt(llist, val, llist->size);
-}
+node *removeNode(node **head, int val)
+{
+    // It's really important to understand that pp is not a pointer
+    // to a node.  It's a pointer to a pointer to a node.  In
+    // other words, it contains the address of a pointer to a node.
+    node **pp = head;
 
-void addLlNodeFirst(struct linkedList *llist, int val) {
-    addLlNodeAt(llist, val, 0);
-}
-
-void removeLlNodeAt(struct linkedList *llist, int i) {
-    if(!llist->root) {
-        return;
+    // While pp contains the address to a non-null pointer AND 
+    // the non-null pointer doesn't point to the desired node.
+    while (*pp && ((*pp)->val) != val)
+    {
+        // Here's the hard part to really understand. First we
+        // dereference pp and get a pointer to a node.  Then, we
+        // use the -> operator to get that node's pointer to the
+        // next node.  Finally, we assign the address of that
+        // pointer to pp.
+        pp = &((*pp)->next);
+        // note that we can't have done the following:
+        // node *t = ((*pp)->next); pp = &t;
+        // By using the temp variable t, &t is no longer the
+        // location in memory of the pointer-to-next of some node.
+        // Instead it's just the location in memory of t, the
+        // temp node pointer.  So later, when we delete the desired
+        // node using '*pp = (*pp)->next' we'll only be overwriting
+        // the value of t and not the value of the
+        // pointer-to-next of the node before the node to remove.
     }
 
-    if(!llist->root->next) {
-        free(llist->root);
-        llist->root = NULL;
-        return;
-    }
+    // If the list was empty or did not contain the desired val.
+    if (*pp == NULL)
+        return NULL;
 
-    if(i == 0) {
-        struct llNode *temp = llist->root->next;
-        free(llist->root);
-        llist->root = temp;
-        return;
-    }
+    node *result = *pp;
 
-    struct llNode *currNode = llist->root;
-    while(currNode->next->next) {
-        if(i == 1) {
-            struct llNode *temp = currNode->next;
-            currNode->next = currNode->next->next;
-            free(temp);
-            return;
-        }
-        i--;
-        currNode = currNode->next;
-    }
-    free(currNode->next);
-    currNode->next = NULL;
+    // Go to the place where the pointer is stored an overwrite
+    // it to point to the next node.
+    *pp = (*pp)->next;
+    
+    return result;
 }
 
-void removeLlNodeLast(struct linkedList *llist) {
-    removeLlNodeAt(llist, llist->size-1);
-}
-
-void removeLlNodeFirst(struct linkedList *llist) {
-    removeLlNodeAt(llist, 0);
+void printLinkedList(node *head)
+{
+    while (head)
+    {
+        printf("%d -> ",head->val);
+        head = head->next;
+    }
+    printf("NULL\n");
 }
